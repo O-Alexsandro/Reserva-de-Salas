@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class RoomsService {
@@ -27,7 +29,7 @@ public class RoomsService {
     }
 
     public Rooms updateRooms(int id, Rooms roomDetails){
-        Rooms room = roomsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Room not found with id " + id));
+        Rooms room = roomsRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Room not found with id " + id));
         room.setName(roomDetails.getName());
         room.setCapacity(room.getCapacity());
         room.setLocation(roomDetails.getLocation());
@@ -37,8 +39,12 @@ public class RoomsService {
     }
 
     public Rooms delete (int id){
-        Rooms room = roomsRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Room not found with id " + id));
-        roomsRepository.delete(room);
-        return room;
+        Optional<Rooms> room = roomsRepository.findById(id);
+        if (room.isPresent()){
+            roomsRepository.delete(room.get());
+            return room.get();
+        } else {
+            throw new NoSuchElementException("Room not found with id " + id);
+        }
     }
 }
