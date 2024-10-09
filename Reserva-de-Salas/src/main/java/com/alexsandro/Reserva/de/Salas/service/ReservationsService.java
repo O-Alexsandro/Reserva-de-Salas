@@ -50,17 +50,30 @@ public class ReservationsService {
         return reservationsRepository.save(newReservation);
     }
 
-    public Reservations updateReservations (int id, Reservations reservations){
-        Reservations reservations1 = reservationsRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Room not found with id " + id));
+    public Reservations updateReservations (int id, ReservationRequest request){
+        Reservations reservations = reservationsRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Reservation not found with id " + id));
 
-        reservations1.setDataReserve(reservations.getDataReserve());
-        reservations1.setTimeStart(reservations.getTimeStart());
-        reservations1.setTimeEnd(reservations.getTimeEnd());
-        reservations1.setRooms(reservations.getRooms());
-        reservations1.setStatus(reservations.getStatus());
-        reservations1.setUsers(reservations.getUsers());
+        Rooms rooms = null;
+        if (request.roomId()!= 0){
+            rooms = roomsRepository.findById(request.roomId()).orElseThrow(() -> new NoSuchElementException("Room not found with id " + request.roomId()));
+        } else {
+            rooms = reservations.getRooms();
+        }
 
-        return reservationsRepository.save(reservations1);
+        Users users = null;
+        if (request.userId() !=0){
+            users = usersRepository.findById(request.userId()).orElseThrow(() -> new NoSuchElementException("User not found with id " + request.userId()));
+        } else {
+            users = reservations.getUsers();
+        }
+        Reservations updatedReservation = new Reservations();
+        updatedReservation.setRooms(rooms);
+        updatedReservation.setUsers(users);
+        updatedReservation.setDataReserve(request.dataReserve());
+        updatedReservation.setTimeStart(request.timeStart());
+        updatedReservation.setTimeEnd(request.timeEnd());
+        updatedReservation.setStatus(request.status());
+        return reservationsRepository.save(updatedReservation);
     }
 
     public Reservations deleteReservations (int id){
