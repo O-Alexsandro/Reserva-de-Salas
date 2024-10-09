@@ -1,5 +1,6 @@
 package com.alexsandro.Reserva.de.Salas.controller;
 
+import com.alexsandro.Reserva.de.Salas.DTO.ReservationRequest;
 import com.alexsandro.Reserva.de.Salas.domain.reservas.Reservations;
 import com.alexsandro.Reserva.de.Salas.service.ReservationsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,8 @@ public class ReservationsController {
     }
 
     @PostMapping
-    public ResponseEntity createReservation (@RequestBody Reservations reservations){
-        Reservations newReservation = reservationsService.createReservations(reservations);
+    public ResponseEntity createReservation (@RequestBody ReservationRequest request){
+        Reservations newReservation = reservationsService.createReservations(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(newReservation);
     }
 
