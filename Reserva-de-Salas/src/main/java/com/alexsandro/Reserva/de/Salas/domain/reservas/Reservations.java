@@ -1,5 +1,6 @@
 package com.alexsandro.Reserva.de.Salas.domain.reservas;
 
+import com.alexsandro.Reserva.de.Salas.DTO.ReservationRequest;
 import com.alexsandro.Reserva.de.Salas.domain.salas.Rooms;
 import com.alexsandro.Reserva.de.Salas.domain.usuarios.Users;
 import jakarta.persistence.*;
@@ -38,4 +39,11 @@ public class Reservations {
     private LocalTime timeEnd;
 
     private String status;
+
+    public Reservations (ReservationRequest request){
+        this.dataReserve = request.dataReserve();
+        this.timeStart = request.timeStart();
+        this.timeEnd = request.timeEnd();
+        this.status = request.status();
+    }
 }
