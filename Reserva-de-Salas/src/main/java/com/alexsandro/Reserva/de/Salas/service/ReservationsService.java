@@ -10,6 +10,7 @@ import com.alexsandro.Reserva.de.Salas.repository.UsersRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -29,8 +30,24 @@ public class ReservationsService {
         this.roomsRepository = roomsRepository;
     }
 
-    public List<Reservations> getReservation (){
-        return reservationsRepository.findAll();
+    public List<Reservations> getReservation(LocalDate dataReserve, Integer roomId, Integer userId) {
+        if (dataReserve != null && roomId != null && userId != null) {
+            return reservationsRepository.findByDataReserveAndRoomsIdAndUsersId(dataReserve, roomId, userId);
+        } else if (dataReserve != null && roomId != null) {
+            return reservationsRepository.findByDataReserveAndRoomsId(dataReserve, roomId);
+        } else if (dataReserve != null && userId != null) {
+            return reservationsRepository.findByDataReserveAndUsersId(dataReserve, userId);
+        } else if (roomId != null && userId != null) {
+            return reservationsRepository.findByRoomsIdAndUsersId(roomId, userId);
+        } else if (dataReserve != null) {
+            return reservationsRepository.findByDataReserve(dataReserve);
+        } else if (roomId != null) {
+            return reservationsRepository.findByRoomsId(roomId);
+        } else if (userId != null) {
+            return reservationsRepository.findByUsersId(userId);
+        } else {
+            return reservationsRepository.findAll();
+        }
     }
 
     public Reservations createReservations (ReservationRequest request) {
