@@ -2,6 +2,7 @@ package com.alexsandro.Reserva.de.Salas.service;
 
 import com.alexsandro.Reserva.de.Salas.domain.usuarios.Users;
 import com.alexsandro.Reserva.de.Salas.repository.UsersRepository;
+import jakarta.transaction.Transactional;
 import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 
@@ -22,10 +23,12 @@ public class UsersService {
         return usersRepository.findAll();
     }
 
+    @Transactional
     public Users createUsers (Users users){
         return usersRepository.save(users);
     }
 
+    @Transactional
     public Users updateUsers (int id, Users usersDetails){
         Users users1 = usersRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Room not found with id " + id));
         users1.setName(usersDetails.getName());
@@ -36,6 +39,7 @@ public class UsersService {
         return usersRepository.save(users1);
     }
 
+    @Transactional
     public Users deleteUsers (int id){
         Optional<Users> users = usersRepository.findById(id);
         if (users.isPresent()){

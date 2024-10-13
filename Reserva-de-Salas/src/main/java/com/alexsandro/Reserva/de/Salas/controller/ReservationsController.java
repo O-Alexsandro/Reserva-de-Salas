@@ -3,6 +3,7 @@ package com.alexsandro.Reserva.de.Salas.controller;
 import com.alexsandro.Reserva.de.Salas.DTO.ReservationRequest;
 import com.alexsandro.Reserva.de.Salas.domain.reservas.Reservations;
 import com.alexsandro.Reserva.de.Salas.service.ReservationsService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

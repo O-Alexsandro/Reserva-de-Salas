@@ -7,6 +7,7 @@ import com.alexsandro.Reserva.de.Salas.domain.usuarios.Users;
 import com.alexsandro.Reserva.de.Salas.repository.ReservationsRepository;
 import com.alexsandro.Reserva.de.Salas.repository.RoomsRepository;
 import com.alexsandro.Reserva.de.Salas.repository.UsersRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -50,6 +51,7 @@ public class ReservationsService {
         }
     }
 
+    @Transactional
     public Reservations createReservations (ReservationRequest request) {
         Users user = usersRepository.findById(request.userId()).orElseThrow(() -> new NoSuchElementException("User not found with id " + request.userId()));
         Rooms rooms = roomsRepository.findById(request.roomId()).orElseThrow(() -> new NoSuchElementException("Room not found with id " + request.userId()));
@@ -61,12 +63,10 @@ public class ReservationsService {
         newReservation.setTimeStart(request.timeStart());
         newReservation.setTimeEnd(request.timeEnd());
         newReservation.setStatus(request.status());
-
-        System.out.println("Data Reserve: " + request.dataReserve());  // Log para verificar o valor
-
         return reservationsRepository.save(newReservation);
     }
 
+    @Transactional
     public Reservations updateReservations (int id, ReservationRequest request){
         Reservations reservations = reservationsRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Reservation not found with id " + id));
 
@@ -78,21 +78,22 @@ public class ReservationsService {
         }
 
         Users users = null;
-        if (request.userId() !=0){
+        if (request.userId() != 0){
             users = usersRepository.findById(request.userId()).orElseThrow(() -> new NoSuchElementException("User not found with id " + request.userId()));
         } else {
             users = reservations.getUsers();
         }
-        Reservations updatedReservation = new Reservations();
-        updatedReservation.setRooms(rooms);
-        updatedReservation.setUsers(users);
-        updatedReservation.setDataReserve(request.dataReserve());
-        updatedReservation.setTimeStart(request.timeStart());
-        updatedReservation.setTimeEnd(request.timeEnd());
-        updatedReservation.setStatus(request.status());
-        return reservationsRepository.save(updatedReservation);
+
+        reservations.setRooms(rooms);
+        reservations.setUsers(users);
+        reservations.setDataReserve(request.dataReserve());
+        reservations.setTimeStart(request.timeStart());
+        reservations.setTimeEnd(request.timeEnd());
+        reservations.setStatus(request.status());
+        return reservationsRepository.save(reservations);
     }
 
+    @Transactional
     public Reservations deleteReservations (int id){
         Optional<Reservations> optionalReservations = reservationsRepository.findById(id);
         if (optionalReservations.isPresent()){

@@ -2,6 +2,7 @@ package com.alexsandro.Reserva.de.Salas.service;
 
 import com.alexsandro.Reserva.de.Salas.domain.salas.Rooms;
 import com.alexsandro.Reserva.de.Salas.repository.RoomsRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,10 +25,12 @@ public class RoomsService {
         return roomsRepository.findAll();
     }
 
+    @Transactional
     public Rooms createRooms (Rooms rooms){
         return roomsRepository.save(rooms);
     }
 
+    @Transactional
     public Rooms updateRooms(int id, Rooms roomDetails){
         Rooms room = roomsRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Room not found with id " + id));
         room.setName(roomDetails.getName());
@@ -38,6 +41,7 @@ public class RoomsService {
         return roomsRepository.save(room);
     }
 
+    @Transactional
     public Rooms delete (int id){
         Optional<Rooms> room = roomsRepository.findById(id);
         if (room.isPresent()){
