@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -102,5 +103,16 @@ public class ReservationsService {
         } else {
             throw new NoSuchElementException("Room not found with id " + id);
         }
+    }
+
+    public boolean isRoomAvailable (@RequestBody int roomId, LocalDate dataReserve, LocalTime timeStart, LocalTime timeEnd){
+        List<Reservations> check = reservationsRepository.findByRoomsIdAndDataReserve(roomId, dataReserve);
+
+        for (Reservations reservation : check) {
+            if ((timeStart.isBefore(reservation.getTimeEnd()) && timeEnd.isAfter(reservation.getTimeStart()))) {
+                return false;
+            }
+        }
+        return true;
     }
 }
