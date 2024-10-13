@@ -2,10 +2,12 @@ package com.alexsandro.Reserva.de.Salas.repository;
 
 import com.alexsandro.Reserva.de.Salas.domain.reservas.Reservations;
 import com.alexsandro.Reserva.de.Salas.domain.salas.Rooms;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public interface ReservationsRepository extends JpaRepository <Reservations, Integer>, JpaSpecificationExecutor<Reservations> {
@@ -21,4 +23,7 @@ public interface ReservationsRepository extends JpaRepository <Reservations, Int
     List<Reservations> findByDataReserveAndUsersId(LocalDate dataReserve, Integer userId);
     List<Reservations> findByRoomsIdAndUsersId(Integer roomId, Integer userId);
 
+    List<Reservations> findByRoomsIdAndDataReserveAndTimeStartAndTimeEnd(Integer roomId, LocalDate dataReserve, LocalTime timeStart, LocalTime timeEnd);
+
+    List<Reservations> findByRoomsIdAndDataReserve(Integer roomId, LocalDate dataReserve);
 }
